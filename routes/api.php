@@ -21,34 +21,14 @@ use App\Models\User;
 |
 */
 
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
-
-
-//Route::resource('/studentapi', StudentApiController::class);
-//Route::get('/studentapi', [StudentApiController::class, 'index']);
-//Route::get('/studentapi', 'App\Http\Controllers\StudentApiController@index');
-
-//  Route::get('/', function (Request $request) {
-//      $user=User::inRandomOrder()->first();
-//     $user->notify(new NotificationToTeacherForAssignedStudent());
-//     dd("sasasa");
-//  });
-
-
-
 //Admin  API
 Route::post('/login', [AdminApiController::class, 'login']);
 Route::group(['prefix' => 'admin', 'middleware' => 'auth:api'], function () {
     Route::post('logout', [AdminApiController::class, 'logout']);
     Route::get('profile', [AdminApiController::class, 'profile']);
-
     Route::post('studentassigned', [AdminApiController::class, 'studentassignedtoteacher']);
     Route::post('approveduserbyadmin', [AdminApiController::class, 'approveduserbyadmin']);
     Route::get('userlist', [AdminApiController::class, 'userlist']);
-
-    
 });
 
 // Student API
@@ -59,10 +39,7 @@ Route::group(['prefix' => 'student', 'middleware' => ['auth:api','studentAuth']]
     Route::put('updateprofile/{userId}', [StudentApiController::class, 'updateprofile']);
     Route::delete('delete/{userId}', [StudentApiController::class, 'delete']);
     Route::put('updatepassword/{userId}', [StudentApiController::class, 'updatepassword']);
-    Route::post('updateprofilepicture', [StudentApiController::class, 'updateprofilepicture']);
-
-    
-    
+    Route::post('updateprofilepicture', [StudentApiController::class, 'updateprofilepicture']); 
     
 });
 
