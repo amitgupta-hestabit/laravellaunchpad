@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Events\Approval;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-
+use App\Notifications\NotificationToTeacherForAssignedStudent;
+use App\Mail\ApprovedMail;
 class DashboardController extends Controller
 {
    
@@ -59,21 +59,23 @@ class DashboardController extends Controller
         return view('admin.edit-teacher', ['user' => $user]);
     }
 
-    public function updateStaudent(Request $request, $userId)
+    public function updateStudent(Request $request, $userId)
     {
+        $record = User::find($userId);
         $user = User::findOrFail($userId);
         $user->assigned_teacher = $request->assigned_teacher;
         $user->status = $request->status;
-        if($request->status=='active'){
-            $user->is_approved=1;
-            // send mail when student will be approved  
-        }else{
-            $user->is_approved=0;
-        }
+      
         $user->save();
-        $teacherData = User::find($user->assigned_teacher);
-        //$teacherData->notify((new \App\Notifications\NewStudentAssignedNotification($user, $teacherData)));
-        //Approval::dispatch($user);
+        if($request->assigned_teacher){
+            
+            if($request->assigned_teacher != $record->assigned_teacher){
+                
+                $teacherData = User::find($user->assigned_teacher);
+                $teacherData->notify((new NotificationToTeacherForAssignedStudent($teacherData->name,$user->name)));
+            }
+        }
+       
         session()->flash('success', 'Student are successfully updated');
         return redirect()->to('/admin/dashboard'); 
     }
@@ -81,15 +83,39 @@ class DashboardController extends Controller
     {
         $user = User::findOrFail($userId);
         $user->status = $request->status;
-        if($request->status=='active'){
+        $user->save();
+        
+        session()->flash('success', 'Teacher are successfully updated');
+        return redirect()->to('/admin/dashboard');
+    }
+    public function approvedStudent(Request $request, $userId)
+    {
+        $user = User::findOrFail($userId);
+       
+        if($request->is_approved==0){
             $user->is_approved=1;
             // send mail when teacher will be approved
         }else{
             $user->is_approved=0;
         }
         $user->save();
-        
-        session()->flash('success', 'Teacher are successfully updated');
+        Mail::to($user->email)->send(new ApprovedMail($user->user_type,$user->name));
+        session()->flash('success', 'Student has been successfully approved');
+        return redirect()->to('/admin/dashboard');
+    }
+    public function approvedTeacher(Request $request, $userId)
+    {
+        $user = User::findOrFail($userId);
+       
+        if($request->is_approved==0){
+            $user->is_approved=1;
+            // send mail when teacher will be approved
+        }else{
+            $user->is_approved=0;
+        }
+        $user->save();
+        Mail::to($user->email)->send(new ApprovedMail($user->user_type,$user->name));
+        session()->flash('success', 'Teacher has been successfully approved');
         return redirect()->to('/admin/dashboard');
     }
 

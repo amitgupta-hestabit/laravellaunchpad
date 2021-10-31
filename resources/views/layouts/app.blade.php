@@ -33,12 +33,12 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
                     </ul>
 
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ml-auto">
                         <!-- Authentication Links -->
+                        
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
@@ -52,6 +52,17 @@
                                 </li>
                             @endif
                         @else
+                        @php
+                        if (Auth::user()->user_type == 'TEACHER'){
+                            $count = \App\Models\Notification::where(['notifiable_id'=>Auth::user()->id,'read_at'=>NULL])->count();
+                            
+                            
+                        }
+
+                        
+                        
+                        @endphp
+                        <span style="text-align:center;width: 25px;height: 25px;border-radius: 56%; background-color: green">{{ $count }}</span>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}

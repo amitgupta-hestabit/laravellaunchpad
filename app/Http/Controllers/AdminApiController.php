@@ -105,7 +105,7 @@ class AdminApiController extends Controller
             
             $studentassigned->save();
             $user=User::find($request->teacher_id);
-            $user->notify(new NotificationToTeacherForAssignedStudent($tuser,$suser));
+            $user->notify(new NotificationToTeacherForAssignedStudent($tuser[0]->name,$suser[0]->name));
         
             $responseArr = [];
             $responseArr['msg'] = "You have successfully assigned student to teacher.";

@@ -21,8 +21,8 @@ class NotificationToTeacherForAssignedStudent extends Notification implements Sh
     public function __construct($tuser,$suser)
     {
         //
-        $this->tuser=$tuser[0];
-        $this->suser=$suser[0];
+         $this->tuser=$tuser;
+         $this->suser=$suser;
     }
 
     /**
@@ -33,7 +33,8 @@ class NotificationToTeacherForAssignedStudent extends Notification implements Sh
      */
     public function via($notifiable)
     {
-        return ['mail'];
+        //return ['database','mail'];
+        return ['database','mail'];
     }
 
     /**
@@ -45,8 +46,8 @@ class NotificationToTeacherForAssignedStudent extends Notification implements Sh
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Dear Teacher '.$this->tuser->name.',')
-                    ->line('You have assigned a new student:- '.$this->suser->name)
+                    ->line('Dear Teacher '.$this->tuser.',')
+                    ->line('You have assigned a new student:- '.$this->suser)
                     ->action('Visit', url('/'))
                     ->line('Thanks');
     }
@@ -61,6 +62,7 @@ class NotificationToTeacherForAssignedStudent extends Notification implements Sh
     {
         return [
             //
+            'data'=>'Dear Teacher '.$this->tuser.' , '.' You have assigned a new student'.$this->suser
         ];
     }
 }

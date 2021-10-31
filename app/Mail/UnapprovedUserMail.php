@@ -31,6 +31,6 @@ class UnapprovedUserMail extends Mailable
     {
         //return $this->view('view.name',$this->users);
         return $this->subject("Unapproved user List")->view('emails.unapproveduserlistmail');
-        //->with('users',$this->users);
+      
     }
 }

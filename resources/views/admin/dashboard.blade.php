@@ -61,9 +61,44 @@
                                     @endphp</td>
                                     <td>{{ $user->status }}</td>
                                     @if ($user->user_type == 'STUDENT')
-                                        <td><a href="{{ route('admin.edit-student', ['userId'=>$user->id]) }}" class="btn btn-info btn-sm">Teacher assigned & Approved </a></td>
+                                        <td><a href="{{ route('admin.edit-student', ['userId'=>$user->id]) }}" class="btn btn-info btn-sm">Teacher assigned</a>
+                                                <div>
+                                                <form method="POST" action="{{route('admin.approved-student',['userId' => $user->id])}}" enctype="multipart/form-data">
+                                                    @csrf
+                                                    @method('patch')
+                                                    
+                                                            <input id="is_approved"  type="hidden" class="form-control @error('is_approved') is-invalid @enderror" name="is_approved" value="{{ $user->is_approved }}" autocomplete="is_approved">
+                                                            <button type="submit" class="btn btn-primary">
+                                                                @if ($user->is_approved == 0) {{ __('Approved') }}
+                                                                @else {{ __('UnApproved') }}
+                                                                @endif
+                                                                </button>
+                                                       
+                                                </form>
+                                            
+                                            </div>
+                                        </td>
                                     @else
-                                        <td><a href="{{ route('admin.edit-teacher', ['userId'=>$user->id]) }}" class="btn btn-info btn-sm">Approved</a></td>
+                                        <td>
+                                            {{-- <a href="{{ route('admin.edit-teacher', ['userId'=>$user->id]) }}" class="btn btn-info btn-sm">Approved</a> --}}
+                                            <div>
+                                                <form method="POST" action="{{route('admin.approved-student',['userId' => $user->id])}}" enctype="multipart/form-data">
+                                                    @csrf
+                                                    @method('patch')
+                                                   
+                                                        
+                                                            <input id="is_approved"  type="hidden" class="form-control @error('is_approved') is-invalid @enderror" name="is_approved" value="{{ $user->is_approved }}" autocomplete="is_approved">
+                                                            <button type="submit" class="btn btn-primary">
+                                                                @if ($user->is_approved == 0) {{ __('Approved') }}
+                                                                @else {{ __('UnApproved') }}
+                                                                @endif
+                                                                </button>
+                                                       
+                                                    
+                                                </form>
+                                            </div>
+                                            
+                                        </td>
                                     @endif
                                 </tr>
                             @endforeach

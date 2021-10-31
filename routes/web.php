@@ -39,8 +39,10 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth', 'adminAuth']], funct
 
     Route::get('student/edit/{userId}', [AdminDashboardController::class, 'editStudent'])->name('admin.edit-student');
     Route::get('teacher/edit/{userId}', [AdminDashboardController::class, 'editTeacher'])->name('admin.edit-teacher');
-    route::patch('student/update/{userId}', [AdminDashboardController::class, 'updateStaudent'])->name('admin.update-student');
+    route::patch('student/update/{userId}', [AdminDashboardController::class, 'updateStudent'])->name('admin.update-student');
     route::patch('teacher/update/{userId}', [AdminDashboardController::class, 'updateTeacher'])->name('admin.update-teacher');
+    route::patch('student/approved/{userId}', [AdminDashboardController::class, 'approvedStudent'])->name('admin.approved-student');
+    route::patch('teacher/approved/{userId}', [AdminDashboardController::class, 'approvedTeacher'])->name('admin.approved-teacher');
 });
 
 Route::group(['prefix' => 'teacher', 'middleware' => ['auth', 'teacherAuth']], function () {
