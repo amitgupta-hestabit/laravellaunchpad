@@ -11,19 +11,21 @@ use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 use App\Notifications\NotificationToTeacherForAssignedStudent;
 use App\Mail\ApprovedMail;
-
+use App\Http\Requests\LoginRequest;
+use Illuminate\Support\Facades\Hash;
 class AdminApiController extends Controller
 {
 
-    public function login(Request $request){
+    public function login(LoginRequest $request){
 
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-            'remember_me' => 'boolean'
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 202);
+        $validated = $request->validated();
+        // $validator = Validator::make($request->all(), [
+        //     'email' => 'required|string|email',
+        //     'password' => 'required|string',
+        //     'remember_me' => 'boolean'
+        // ]);
+        if ($validated->fails()) {
+            return response()->json($validated->errors(), 202);
         }
 
         $credentials = request(['email', 'password']);

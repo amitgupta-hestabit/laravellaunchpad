@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Http\Requests\RegisterRequest;
 class RegisterController extends Controller
 {
     /*
@@ -32,16 +33,7 @@ class RegisterController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
-    protected function redirectTo()
-    {
-        if (Auth()->user()->role_id == 1) {
-            return route('admin.dashboard');
-        } elseif (Auth()->user()->role_id == 2) {
-            return route('teacher.dashboard');
-        } elseif (Auth()->user()->role_id == 3) {
-            return route('student.dashboard');
-        }
-    }
+   
 
     /**
      * Create a new controller instance.
@@ -59,16 +51,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data)
-    {
-        return Validator::make($data, [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'user_type' => ['required'],
-        ]);
-    }
-
+    
     /**
      * Create a new user instance after a valid registration.
      *
@@ -87,24 +70,9 @@ class RegisterController extends Controller
         ]);
     }
 
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
-        // echo "sasas";exit;
-        // dd($request->all());
-        
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users',
-            'password' => 'min:6|required_with:password_confirmation|same:password_confirmation',
-            'password_confirmation' => 'min:6',
-            'user_type' => 'required',
-            'profile_picture' => 'required|image|mimes:jpg,png,jpeg,gif,svg',
-            'current_school' => 'required',
-            'previous_school' => 'required',
-            'address' => 'required',
-            'parent_details.*' => 'required|array',
-        ]);
-       
+        $validated = $request->validated();
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;
@@ -139,6 +107,6 @@ class RegisterController extends Controller
        
        
         session()->flash('success', 'You are successfully register wait for approval by admin');
-        return redirect()->to('/register');
+        return redirect()->route('register');
     }
 }

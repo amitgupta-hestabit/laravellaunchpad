@@ -43,7 +43,8 @@ class DashboardController extends Controller
         }
         $user->save();
         session()->flash('success', 'You are successfully updated');
-        return redirect()->to('/admin/profile');
+        //return redirect()->to('/admin/profile');
+        return redirect()->route('admin.update-profile');
     }
 
 
@@ -77,7 +78,8 @@ class DashboardController extends Controller
         }
        
         session()->flash('success', 'Student are successfully updated');
-        return redirect()->to('/admin/dashboard'); 
+       // return redirect()->to('/admin/dashboard'); 
+        return redirect()->route('admin.dashboard');
     }
     public function updateTeacher(Request $request, $userId)
     {
@@ -86,7 +88,7 @@ class DashboardController extends Controller
         $user->save();
         
         session()->flash('success', 'Teacher are successfully updated');
-        return redirect()->to('/admin/dashboard');
+        return redirect()->route('admin.dashboard');
     }
     public function approvedStudent(Request $request, $userId)
     {
@@ -101,7 +103,7 @@ class DashboardController extends Controller
         $user->save();
         Mail::to($user->email)->send(new ApprovedMail($user->user_type,$user->name));
         session()->flash('success', 'Student has been successfully approved');
-        return redirect()->to('/admin/dashboard');
+        return redirect()->route('admin.dashboard');
     }
     public function approvedTeacher(Request $request, $userId)
     {
@@ -116,7 +118,7 @@ class DashboardController extends Controller
         $user->save();
         Mail::to($user->email)->send(new ApprovedMail($user->user_type,$user->name));
         session()->flash('success', 'Teacher has been successfully approved');
-        return redirect()->to('/admin/dashboard');
+        return redirect()->route('admin.dashboard');
     }
 
 }

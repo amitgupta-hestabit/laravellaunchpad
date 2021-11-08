@@ -54,7 +54,7 @@
                         @else
                         @php
                         if (Auth::user()->user_type == 'TEACHER'){
-                            $count = \App\Models\Notification::where(['notifiable_id'=>Auth::user()->id,'read_at'=>NULL])->count();
+                            $count  = \App\Models\Notification::where(['notifiable_id'=>Auth::user()->id,'read_at'=>NULL])->count();
                             
                             
                         }
@@ -62,7 +62,7 @@
                         
                         
                         @endphp
-                        <span style="text-align:center;width: 25px;height: 25px;border-radius: 56%; background-color: green">{{ $count }}</span>
+                        <span style="text-align:center;width: 25px;height: 25px;border-radius: 56%; background-color: green">{{ $count ?? '' }}</span>
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }}
